@@ -16,15 +16,15 @@ public abstract class HalcyonRecyclerAdapter<T> extends RecyclerView.Adapter<Hal
 
     protected List<T> mDataList;
     protected View mItemView;
-
-    public HalcyonRecyclerAdapter(@NonNull List<T> dataList, View itemView) {
+    protected int mLayoutId;
+    public HalcyonRecyclerAdapter(@NonNull List<T> dataList, int layoutId) {
         mDataList = dataList;
-        mItemView = itemView;
+        mLayoutId = layoutId;
     }
 
     @Override
     public HalcyonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return HalcyonViewHolder.createViewHolder(mItemView);
+        return HalcyonViewHolder.createViewHolder(parent.getContext(),parent,mLayoutId);
     }
 
     @Override
