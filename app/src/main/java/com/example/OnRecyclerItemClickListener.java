@@ -47,7 +47,7 @@ public class OnRecyclerItemClickListener implements RecyclerView.OnItemTouchList
                 if(recyclerView.getAdapter() instanceof RecyclerAdapterWrapper){
                     RecyclerAdapterWrapper wrapper = (RecyclerAdapterWrapper) recyclerView.getAdapter();
                     if(wrapper.isInnerAdapterPosition(position)){
-
+                        wrapper.onItemCheckStateChange(position-wrapper.getHeadersCount());
                         onItemClick(vh,position-wrapper.getHeadersCount());
                     }
                 }else{
@@ -57,16 +57,6 @@ public class OnRecyclerItemClickListener implements RecyclerView.OnItemTouchList
             }
             return true;
         }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-           /* if (child != null) {
-                RecyclerView.ViewHolder vh = recyclerView.getChildViewHolder(child);
-                onLongClick(vh);
-            }*/
-        }
-
     }
 
 

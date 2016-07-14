@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Checkable;
 import android.widget.TextView;
 
 import com.halcyon.HalcyonRecyclerAdapter;
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        mAdapter = new MyAdapter(options, R.layout.item_recycler,R.id.checkbox);
+        mAdapter = new MyAdapter(options, R.layout.item_recycler);
         mAdapterWrapper = new RecyclerAdapterWrapper(mAdapter);
+        mAdapter.setCheckableId(R.id.checkbox);
         final View view = addHeader(null);
 
         mRecyclerView.setAdapter(mAdapterWrapper);
@@ -56,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(ViewHolder vh,int position) {
                 Log.e("item click ",""+position);
-
             }
         });
 
@@ -84,9 +85,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public static class MyOption {
+    public static class MyOption implements Checkable {
         public String content;
         public int choice;
+
+        @Override
+        public void setChecked(boolean checked) {
+
+        }
+
+        @Override
+        public boolean isChecked() {
+            return choice == 1;
+        }
+
+        @Override
+        public void toggle() {
+
+        }
     }
 
     class MyAdapter extends HalcyonRecyclerAdapter<MyOption> {
@@ -95,15 +111,6 @@ public class MainActivity extends AppCompatActivity {
             super(dataList, layoutId);
         }
 
-        public MyAdapter(List<MyOption> dataList, int layoutId, int checkableId) {
-            super(dataList, layoutId, checkableId);
-        }
-
-
-        @Override
-        protected boolean initItemChecked(int position) {
-            return getItem(position).choice == 1;
-        }
 
         @Override
         public void convert(HalcyonViewHolder holder, int position) {

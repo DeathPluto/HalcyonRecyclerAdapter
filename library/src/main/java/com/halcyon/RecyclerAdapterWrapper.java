@@ -27,9 +27,9 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
     private View mLoadMoreView;
     private int mLoadMoreLayoutId;
     private OnLoadMoreListener mOnLoadMoreListener;
-    private RecyclerView.Adapter mInnerAdapter;
+    private HalcyonRecyclerAdapter mInnerAdapter;
 
-    public RecyclerAdapterWrapper(RecyclerView.Adapter adapter) {
+    public RecyclerAdapterWrapper(HalcyonRecyclerAdapter adapter) {
         mInnerAdapter = adapter;
     }
 
@@ -37,7 +37,10 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
         return mLoadMoreView != null || mLoadMoreLayoutId != 0;
     }
 
-
+    public void onItemCheckStateChange(int position){
+        mInnerAdapter.onItemCheckStateChange(position);
+        notifyDataSetChanged();
+    }
 
     public interface OnLoadMoreListener {
         void onLoadMoreRequested();
@@ -90,7 +93,7 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
             //todo refresh stuff
             return;
         }
-        mInnerAdapter.onBindViewHolder(holder, position - getHeadersCount());
+        mInnerAdapter.onBindViewHolder((HalcyonViewHolder) holder, position - getHeadersCount());
     }
 
     @Override
@@ -186,5 +189,7 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
         mLoadMoreLayoutId = layoutId;
         return this;
     }
+
+
 
 }

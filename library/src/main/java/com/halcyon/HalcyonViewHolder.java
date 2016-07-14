@@ -23,6 +23,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
+import com.halcyon.HalcyonRecyclerAdapter.OnCheckStateChangeListener;
+
 /**
  * ©2016-2017 kmhealthcloud.All Rights Reserved <p/>
  * Created by: L  <br/>
@@ -37,6 +39,8 @@ public class HalcyonViewHolder extends RecyclerView.ViewHolder implements Checka
     private Context mContext;
     private View mItemView;
     private int mCheckableId = -1;
+    private OnCheckStateChangeListener mOnCheckStateChangeListener;
+
 
     public HalcyonViewHolder(View itemView) {
         super(itemView);
@@ -47,6 +51,11 @@ public class HalcyonViewHolder extends RecyclerView.ViewHolder implements Checka
 
     public HalcyonViewHolder setCheckableId(int checkableId) {
         mCheckableId = checkableId;
+        return this;
+    }
+
+    public HalcyonViewHolder setOnCheckStateChangeListener(OnCheckStateChangeListener onCheckStateChangeListener) {
+        mOnCheckStateChangeListener = onCheckStateChangeListener;
         return this;
     }
 
@@ -68,10 +77,17 @@ public class HalcyonViewHolder extends RecyclerView.ViewHolder implements Checka
 
     @Override
     public void toggle() {
+        boolean checked = false;
         if(mCheckableId != -1){
             Checkable checkable = getView(mCheckableId);
-            checkable.setChecked(!checkable.isChecked());
+            checked = !checkable.isChecked();
+            checkable.setChecked(checked);
         }
+        if(mOnCheckStateChangeListener != null){
+            int position = getAdapterPosition();
+            mOnCheckStateChangeListener.onCheckedChange(position,checked);
+        }
+
     }
 
     public static HalcyonViewHolder createViewHolder(View itemView) {
