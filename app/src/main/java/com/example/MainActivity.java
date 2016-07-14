@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -44,29 +46,41 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        mAdapter = new MyAdapter(options, R.layout.item_recycler);
+        mAdapter = new MyAdapter(options, R.layout.item_recycler,R.id.checkbox);
         mAdapterWrapper = new RecyclerAdapterWrapper(mAdapter);
-        addHeader(null);
+        final View view = addHeader(null);
+
         mRecyclerView.setAdapter(mAdapterWrapper);
+        mRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(mRecyclerView){
+
+            @Override
+            public void onItemClick(ViewHolder vh,int position) {
+                Log.e("item click ",""+position);
+
+            }
+        });
+
     }
 
 
-    private void addHeader(String content) {
+    private View addHeader(String content) {
         View header = View.inflate(this, R.layout.header, null);
         if (!TextUtils.isEmpty(content)) {
             TextView textView = (TextView) header.findViewById(R.id.tv_content);
             textView.setText(content);
         }
         mAdapterWrapper.addHeaderView(header);
+        return header;
     }
 
-    private void addFooter(String content) {
+    private View addFooter(String content) {
         View footer = View.inflate(this, R.layout.footer, null);
         if (!TextUtils.isEmpty(content)) {
             TextView textView = (TextView) footer.findViewById(R.id.tv_content);
             textView.setText(content);
         }
         mAdapterWrapper.addFooterView(footer);
+        return footer;
     }
 
 
@@ -81,13 +95,21 @@ public class MainActivity extends AppCompatActivity {
             super(dataList, layoutId);
         }
 
+        public MyAdapter(List<MyOption> dataList, int layoutId, int checkableId) {
+            super(dataList, layoutId, checkableId);
+        }
+
+
         @Override
-        public void onBindViewHolder(HalcyonViewHolder holder, int position) {
+        protected boolean initItemChecked(int position) {
+            return getItem(position).choice == 1;
+        }
+
+        @Override
+        public void convert(HalcyonViewHolder holder, int position) {
             MyOption item = getItem(position);
             holder.setText(R.id.tv_content, item.content);
             holder.setText(R.id.checkbox, String.valueOf(item.choice));
-            holder.setCheckableId(R.id.checkbox);
-            holder.setChecked(item.choice == 1);
         }
     }
 }

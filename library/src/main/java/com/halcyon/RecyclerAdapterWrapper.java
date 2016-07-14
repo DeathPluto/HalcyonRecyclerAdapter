@@ -16,6 +16,7 @@ import com.halcyon.utils.WrapperUtils;
  */
 public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+
     private static final int BASE_ITEM_TYPE_HEADER = 100000;
     private static final int BASE_ITEM_TYPE_FOOTER = 200000;
 
@@ -84,6 +85,11 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
         if (isFooterViewPosition(position)) {
             return;
         }
+
+        if(isShowLoadMore(position)){
+            //todo refresh stuff
+            return;
+        }
         mInnerAdapter.onBindViewHolder(holder, position - getHeadersCount());
     }
 
@@ -119,6 +125,7 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
         return getHeadersCount() + getRealItemCount() + getFootersCount() + (hasLoadMore() ? 1 : 0);
     }
 
+
     public int getRealItemCount() {
         return mInnerAdapter.getItemCount();
     }
@@ -131,16 +138,25 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
         return mFooterViews.size();
     }
 
-    private boolean isHeaderViewPosition(int position) {
+    public boolean isHeaderViewPosition(int position) {
         return position < getHeadersCount();
     }
 
-    private boolean isFooterViewPosition(int position) {
-        return position >= getHeadersCount() + getRealItemCount() && position < getItemCount();
+    /**
+     *
+     * @param position current position
+     * @return if position is in [headerSize,headerSize+realItemCount)
+     */
+    public boolean isFooterViewPosition(int position) {
+        return position >= getHeadersCount() + getRealItemCount() && position < getHeadersCount()+getRealItemCount();
     }
 
-    private boolean isShowLoadMore(int position) {
+    public boolean isShowLoadMore(int position) {
         return hasLoadMore() && (position >= getItemCount());
+    }
+
+    public boolean isInnerAdapterPosition(int position){
+        return position >= getHeadersCount() && position < getRealItemCount()+getHeadersCount();
     }
 
     public void addHeaderView(View view) {
@@ -149,6 +165,16 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void addFooterView(View view) {
         mFooterViews.put(mFooterViews.size() + BASE_ITEM_TYPE_FOOTER, view);
+    }
+
+    public void removeHeaderView(View view){
+        mHeaderViews.remove(mHeaderViews.indexOfValue(view)+BASE_ITEM_TYPE_HEADER);
+        notifyDataSetChanged();
+    }
+
+    public void removeFooterView(View view){
+        mFooterViews.remove(mFooterViews.indexOfValue(view));
+        notifyDataSetChanged();
     }
 
     public RecyclerAdapterWrapper setLoadMoreView(View loadMoreView) {
@@ -160,4 +186,5 @@ public class RecyclerAdapterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
         mLoadMoreLayoutId = layoutId;
         return this;
     }
+
 }

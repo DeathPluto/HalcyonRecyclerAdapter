@@ -45,8 +45,9 @@ public class HalcyonViewHolder extends RecyclerView.ViewHolder implements Checka
         mViews = new SparseArray<>();
     }
 
-    public void setCheckableId(int checkableId) {
+    public HalcyonViewHolder setCheckableId(int checkableId) {
         mCheckableId = checkableId;
+        return this;
     }
 
     @Override

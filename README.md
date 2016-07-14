@@ -4,9 +4,9 @@ copy some function in ListView 2 RecyclerView
 
 ### todo function
 
-* add headers,footers
+* add & remove headers,footers
 * custom load more views
 * checkable states
-* jcenter publish
+* JCenter publish
 * make demos
 * README optimize

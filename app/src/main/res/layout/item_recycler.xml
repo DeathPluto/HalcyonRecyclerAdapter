@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"/>
 
         <CheckBox
+            android:clickable="false"
             android:id="@+id/checkbox"
             android:text="choice"
             android:textSize="24sp"
